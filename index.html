@@ -1,0 +1,248 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Burth Calculatiore</title>
+<link rel="stylesheet" href="reset.css">
+<link rel="stylesheet" href="typebase.css">
+<link rel="stylesheet" href="animate.css">
+<link rel="stylesheet" href="whatnot.css">
+<script src="lib/coffee-script.js"></script>
+<script src="lib/jquery-2.1.4.js"></script>
+<section>
+	<h2>Random Events</h2>
+	<button id="random-event">Make Something Happen</button>
+	<output id="random-event-output"></output>
+</section>
+<section>
+	<h2>Death</h2>
+	<label>
+		<span>Age</span>
+		<input type="number" min="1" id="reaping-age">
+	</label>
+	<label>
+		<span>Health</span>
+		<input type="number" min="0" max="10" id="reaping-health">
+	</label>
+	<!-- <button id="death-button"><img src="scythe.svg" style="height:1em">?</button> -->
+	<button id="death-button"><img src="grim-reaper.svg" style="height:1.4em;vertical-align:bottom">?</button>
+	<output id="death-output"></output>
+</section>
+<section>
+	<h2>Birth</h2>
+	<div id="people"></div>
+	<button id="now-mate">Now mate!</button>
+	<div id="person-output"></div>
+</section>
+<script type="text/coffeescript">
+	
+	lines_of = (text)->
+		line for line in text.split /[\n\r]+/ when (line = line.replace /#.*/, "").match /\S/
+	
+	colon_separated = (lines)->
+		line.split /\s*:\s*/ for line in lines
+	
+	lerp = (a, b, x)->
+		a + (b - a) * x
+	
+	death_chance_modifier_for = (health, doublious=no)->
+		console.log "Get death_chance_modifier_for", health, doublious
+		# death_chance_modifier = lerp(0.5, 0, health / 10)
+		# console.log "Death chance modifier: #{death_chance_modifier}"
+		# chance_of_death += death_chance_modifier
+		# chance_of_death *= lerp(2, 0.5, health / 10)
+		# chance_of_death *=
+		# 	if health > 5
+		# 		(health - 5) * 0.1
+		# 	else if health < 5
+		# 		1 / (health - 5) * 0.1
+		# 	else
+		# 		1
+		# death_chance_modifier = lerp(2, 0.5, health / 10)
+		# death_chance_modifier = 1 + lerp(0.1, -0.1, health / 10)
+		# death_chance_modifier =
+		# 	if health > 5
+		# 		1 + (health - 5) * 0.1
+		# 	else if health < 5
+		# 		1 - (health - 5) * 0.1
+		# 	else
+		# 		1
+		# 1 - ((health - 5) * 0.1) * (if doublious then 2 else 1)
+		1 - ((health - 5) * 0.1) * (if doublious then 1.9 else 1)
+	
+	$.get "events.txt", (text)->
+		# parse events.txt
+		events =
+			for [event_name, event_chance] in colon_separated lines_of text
+				{name: event_name, chance: parseFloat event_chance}
+		
+		# normalize chances
+		total_chance = 0
+		for event in events
+			total_chance += event.chance
+		for event in events
+			event.chance /= total_chance
+		
+		console?.log events
+		
+		get_random_event = ->
+			x = Math.random()
+			bx = 0
+			for event in events
+				if bx <= x <= bx += event.chance
+					return event
+			return event # ?
+		
+		$ "#random-event"
+			.click ->
+				$ "#random-event-output"
+					.empty()
+					.append(
+						$ "<span class='animated bounceIn'>"
+							.text get_random_event().name
+					)
+		
+		
+		$.get "traits.txt", (text)->
+			# parse traits.txt
+			trait_names = lines_of text
+			$ "#people"
+				.append(
+					people = for designation in ["Person A", "Person B"]
+						$ "<div class='person'>"
+							.append(
+								$ "<h3>"
+									.text designation
+							)
+							.append(
+								for trait_name in trait_names
+									$ "<label>"
+										.append(
+											$ "<span>"
+												.text trait_name
+											$ "<input type='number' min='0' max='10'>"
+												.on "change keydown keyup paste cut", (e)->
+													$(e.target).closest ".person"
+														.data trait_name, e.target.value
+										)
+							)
+				)
+			
+			$ "#now-mate"
+				.click ->
+					people = for person_el in $ "#people > .person"
+						person = {}
+						for trait_name in trait_names
+							person[trait_name] = parseFloat $(person_el).data trait_name
+							if isNaN person[trait_name]
+								alert "Invalid value for trait #{trait_name}"
+								throw new Error "Invalid trait value for #{trait_name}"
+						person
+					
+					# average traits
+					newborn = {}
+					for trait_name in trait_names
+						newborn[trait_name] = 0
+					for person in people
+						for k, v of person
+							newborn[k] += v
+					for trait_name in trait_names
+						newborn[trait_name] /= people.length
+					
+					
+					average_health = newborn.Health
+					console.log "Average health: #{average_health}"
+					
+					# chance of death :(
+					console.log "Average health: #{average_health}"
+					# average_health_doubliuos = (if average_health > 5 then 5 + (average_health - 5) * 2 else average_health)
+					# average_health_doubliuos = if average_health > 5 then average_health * 2 else average_health
+					# console.log "Average health doubled halfway mumbojumbo: #{average_health_doubliuos}"
+					death_chance_modifier = death_chance_modifier_for average_health, (average_health > 5)
+					console.log "Death chance modifier: #{death_chance_modifier}"
+					# death_chance = 0.66 * death_chance_modifier
+					death_chance = 0.230769 * death_chance_modifier
+					console.log "Chance of death: #{death_chance}"
+					if Math.random() < death_chance
+						$ "#person-output"
+							.html "<div class='person animated bounceIn'><h3>dead baby :(</h3></div>"
+						return
+					
+					# vary traits
+					for trait_name in trait_names
+						newborn[trait_name] += (Math.random()*2-1)
+					
+					$ "#person-output"
+						.empty()
+						.append(
+							$ "<div class='person animated bounceIn'>"
+								.append(
+									$ "<h3>"
+										.text "Newborn"
+								)
+								.append(
+									for trait_name in trait_names
+										$ "<label>"
+											.text trait_name
+											.append(
+												$ "<input type='number' readonly='readonly'>"
+													.attr value: Math.round newborn[trait_name]
+											)
+								)
+						)
+		
+		$ "#death-button"
+			.click ->
+				age = ($ "#reaping-age").val()
+				health = ($ "#reaping-health").val()
+				# source: http://www.cdc.gov/nchs/data/dvs/hist290_0039.pdf
+				# ALL CAUSES, ALL RACES, "BOTH" SEXES
+				# year: 1900
+				# ["1719.1", "16244.8", "1983.8", "385.9", "585.5", "819.8", "1023.1", "1495.4", "2723.6", "5636.1", "12330.0", "26088.2"]
+				# [0.17190999999999998, 1.62448, 0.19838, 0.03859, 0.05855, 0.08198, 0.10231, 0.14954, 0.27236, 0.56361, 1.233, 2.60882]
+				#  "All Ages", "Under 1", "year 1‐4", "years 5‐14", "years 15‐24", "years 25‐34", "years 35‐44", "years 45‐54", "years 55‐64", "years 65‐74", "years 75‐84", "years 85 years & over"]
+				# (MODIFIED)
+				chance_of_death =
+					switch
+						# when age <  # All Ages
+						# 	0.01719099
+						when age < 1 # this can't actually happen if the input's minimum value is 1
+							# 0.0162448
+							0.025
+						when age < 5
+							# 0.019838
+							# 0.00625
+							# 0.025 / 3
+							# 0.008333
+							0.019838
+						when age < 15
+							0.003859
+						when age < 25
+							0.005855
+						when age < 35
+							0.008198
+						when age < 45
+							0.010231
+						when age < 55
+							0.014954
+						when age < 65
+							0.027236
+						when age < 75
+							0.056361
+						when age < 85
+							0.1233
+						else
+							0.260882
+				
+				death_chance_modifier = death_chance_modifier_for health
+				console.log "Death chance modifier: #{death_chance_modifier}"
+				chance_of_death *= death_chance_modifier
+				console.log "Chance of death: #{chance_of_death}"
+				
+				death = (Math.random() < chance_of_death)
+				
+				$ "#death-output"
+					.empty()
+					.append(
+						$ "<span class='animated bounceIn'>"
+							.text if death then "Ye died" else "Ye survived"
+					)
+</script>

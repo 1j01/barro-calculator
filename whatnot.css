@@ -1,0 +1,54 @@
+html {
+	/*background-image: url("http://api.ning.com/files/p0ZiZvXgHQjD85mwGczrRLQBM5WAeL3QZunM5uaG0sdzM9xEQghkdyL23G97JS3UrVxJsS-4pwQg9UAfOu25Mdk345x5l3Dp/359729medieval.jpg");*/
+	/*background-size: cover;*/
+	/*background-blend-mode: difference;
+	background-color: rebeccapurple;
+	background-color: rgba(210, 116, 48, 0.25);
+	background-blend-mode: multiply;
+	background-color: rgba(66, 255, 213, 0.48);*/
+	/*background-blend-mode: soft-light;*/
+	/*background-color: rgb(165, 128, 42);*/
+	color: white;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.53);
+	background-color: rgb(0, 0, 0);
+}
+html::after {
+	content: "";
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url("https://houseswithhistory.files.wordpress.com/2012/04/26057-4.jpg");
+	background-size: cover;
+	-webkit-filter: blur(6px) saturate(0.5) brightness(0.7);
+	z-index: -1;
+}
+body {
+	font-family: sans-serif;
+	max-width: 70rem;
+	margin: auto;
+	padding: 0.5rem;
+}
+label > input {
+	margin-left: 0.3rem;
+}
+#now-mate,
+#death-button {
+	margin-top: 1rem;
+}
+#random-event {
+	vertical-align: top;
+}
+#death-button {
+	font-size: 1.3em;
+}
+label {
+	display: block;
+	margin-top: 0.1rem;
+}
+label > span {
+	display: inline-block;
+	vertical-align: bottom;
+	width: 3rem;
+}

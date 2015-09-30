@@ -1,0 +1,7 @@
+
+# This file lists attributes that people can have
+
+Health
+
+
+# Oh, is that it?
