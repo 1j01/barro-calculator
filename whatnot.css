@@ -43,6 +43,9 @@ label > input {
 #death-button {
 	font-size: 1.3em;
 }
+#birth-output {
+	min-height: 5em; /* because this is at the bottom of the page and can change height */
+}
 label {
 	display: block;
 	margin-top: 0.1rem;
@@ -51,4 +54,7 @@ label > span {
 	display: inline-block;
 	vertical-align: bottom;
 	width: 3rem;
+}
+.animated {
+	display: inline-block;
 }

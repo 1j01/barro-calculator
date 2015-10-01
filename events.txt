@@ -1,11 +1,11 @@
 
 # This file defines random events that can take place.
-# Values are normalized to all fit in [0..1]
+# Values are chance weights, normalized to add up to 100%
 
 Nuclear Meltdown: 0.4
 Crazy Shit Happens: 0.7
 Deadly Disease: 3
 Do not pass Go. Do not collect $200.: 1
-Pass Go. Collect 200 dollars.: 1
+Pass Go. Collect $200.: 1
 Pass Go, but only collect like $50 or so.: 1
 Nothing happens: 5

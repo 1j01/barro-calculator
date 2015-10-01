@@ -12,8 +12,6 @@ Copyright (c) 2015 Daniel Eden
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  /* oh P.S. haha */
-  display: inline-block;
 }
 
 .animated.infinite {
