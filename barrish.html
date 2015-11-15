@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Barrish Calculator</title>
+<link rel="stylesheet" href="reset.css">
+<link rel="stylesheet" href="typebase.css">
+<link rel="stylesheet" href="animate.css">
+<link rel="stylesheet" href="whatnot.css">
+<script src="lib/coffee-script.js"></script>
+<script src="lib/jquery-2.1.4.js"></script>
+<label>
+	<h2>Input</h2>
+	<textarea id="input">!Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non lobortis eros. Morbi erat dolor, placerat ut consectetur id, congue in ligula. In viverra consectetur ultrices. Sed hendrerit vitae tortor at mollis. Pellentesque feugiat felis nulla, ut tempor purus pharetra at.
+	</textarea>
+</label>
+<label>
+	<h2>Output</h2>
+	<textarea id="output"></textarea>
+</label>
+<script type="text/coffeescript">
+	
+	wind = (word)->
+		t = (" " for [0..500])
+		b = (" " for [0..500])
+		x = 0
+		p = 0
+		for c, i in word
+			if p % 4 in [1, 2] and c.match /\w/
+				t[x] = c
+			else
+				b[x] = c
+			if p % 2 is 1
+				x++
+			if c.match /\w/
+				p += 1
+			else
+				x += 1
+		[t.join(""), b.join("")]
+	
+	wind_text = (text)->
+		words = text.split(" ")
+		tl = ""
+		bl = ""
+		for word in words
+			[wtl, wbl] = wind word
+			tl += wtl.replace(/\s+$/, "") + " "
+			bl += wbl.replace(/\s+$/, "") + " "
+			tl += " " if tl.length < bl.length
+			bl += " " if bl.length < tl.length
+		"#{tl}\n#{bl}!"
+	
+	input = document.getElementById("input")
+	output = document.getElementById("output")
+	do input.onchange = input.oninput = input.onkeyup = ->
+		output.value = wind_text input.value
+	
+</script>

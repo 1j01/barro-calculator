@@ -58,3 +58,7 @@ label > span {
 .animated {
 	display: inline-block;
 }
+a {
+	color: white;
+	text-decoration: underline;
+}
