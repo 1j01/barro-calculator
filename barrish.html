@@ -60,14 +60,13 @@
 			.replace /\/dzh\//g, "D" # dzh
 			.replace /\/ng\//g, "g" # ng
 			.replace /ʉ/g, "u" # oo
-			# .replace /(ay|ey)/g, "a" # ah
 			.replace /ɐ/g, "A"
-			# .replace /ee/g, "e"
 			.replace /ʌ/g, "v" # uh
 			.replace /\/ju\//g, "J" # ju
 			.replace /e̞/g, "i" # ih
-			# .replace /oh/g, "o" # oh
 			.replace /ɘ/g, "E" # eh
+			.replace / \./g, "."
+			.replace /\! /g, "!"
 		output.value = wind_text input.value
 	
 </script>
