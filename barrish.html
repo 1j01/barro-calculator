@@ -46,17 +46,21 @@
 			bl += wbl.replace(/\s+$/, "") + " "
 			tl += " " if tl.length < bl.length
 			bl += " " if bl.length < tl.length
-		"#{tl}\n#{bl}!"
+		"#{tl}\n#{bl}"
 	
 	input = document.getElementById("input")
 	output = document.getElementById("output")
 	do input.onchange = input.oninput = input.onkeyup = ->
-		text = input.value
+		_text = ""
+		for c in input.value
+			_text += c unless c.charCodeAt(0) in [810, 865]
+		
+		text = _text
 			.replace /p̪/g, "P" # pt
 			.replace /v/g, "V" # this is Very silly with a capital V
 			.replace /pj/g, "7"
 			.replace /hh/g, "x"
-			.replace /\[p̪͡f\]|[pf]/g, "9" # pf
+			.replace /\[p̪͡f\]|\[pf\]/g, "9" # pf
 			.replace /\/dzh\//g, "D" # dzh
 			.replace /\/ng\//g, "g" # ng
 			.replace /ʉ/g, "u" # oo
@@ -65,8 +69,9 @@
 			.replace /\/ju\//g, "J" # ju
 			.replace /e̞/g, "i" # ih
 			.replace /ɘ/g, "E" # eh
-			.replace /\s\./g, "."
+			.replace /\s\./g, ";"
 			.replace /!\s/g, "!"
-		output.value = wind_text input.value
+			.replace /\.|·/g, "" # dots can separate syllables
+		output.value = wind_text text
 	
 </script>
