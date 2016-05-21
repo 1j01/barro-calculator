@@ -98,58 +98,43 @@
 				glyph_occurrences[glyph] ?= 0
 				glyph_occurrences[glyph] += 1
 		
-		console.log glyph_occurrences
-		# kv = glyph_occurrences.entries()
-		# kv.sort (a, b)-> a[0] - b[0]
-		# console.log kv
-		
 		sortable_glyph_occurrences = []
 		for glyph, occurrences of glyph_occurrences
 			sortable_glyph_occurrences.push {glyph, occurrences}
 		
 		sortable_glyph_occurrences.sort (a, b)-> a.occurrences - b.occurrences
 		
-		# sorted_glyph_occurrences = {}
-		# sorted_glyph_occurrences[glyph] = occurrences for {glyph, occurrences} in sortable_glyph_occurrences
-		# console.log sorted_glyph_occurrences
-		
-		do make_glyph_occurrences_table = ->
-			table = document.createElement "table"
-			for {glyph, occurrences} in sortable_glyph_occurrences
-				tr = document.createElement "tr"
-				glyph_td = document.createElement "td"
-				occurrences_td = document.createElement "td"
-				glyph_td.textContent = glyph
-				occurrences_td.textContent = occurrences
-				tr.appendChild(glyph_td)
-				tr.appendChild(occurrences_td)
-				table.appendChild(tr)
-			document.body.appendChild(table)
+		# do make_glyph_occurrences_table = ->
+		# 	table = document.createElement "table"
+		# 	for {glyph, occurrences} in sortable_glyph_occurrences
+		# 		tr = document.createElement "tr"
+		# 		glyph_td = document.createElement "td"
+		# 		occurrences_td = document.createElement "td"
+		# 		glyph_td.textContent = glyph
+		# 		occurrences_td.textContent = occurrences
+		# 		tr.appendChild(glyph_td)
+		# 		tr.appendChild(occurrences_td)
+		# 		table.appendChild(tr)
+		# 	document.body.appendChild(table)
 		
 		do make_other_better_glyph_occurrences_table = ->
-			table = document.createElement "table"
-			size = 71 # 91.5 # 2148 * 1/30
-			table.style.width = "#{size * 30}px"
-			table.style.height = "#{size * 30}px"
-			# for y in [0..30]
-			for y in [1...30]
-				tr = document.createElement "tr"
-				# for x in [0..30]
-				for x in [1...30]
-					td = document.createElement "td"
-					# td.textContent = glyph_occurrences[glyph]
-					# td.style.backgroundImage = "url(font/barrish-different.png) " # "url(font/barrish.png)" # "url(font/barrish.svg)"
-					td.style.backgroundImage = "url(font/barrish-3.png)"
-					# td.style.backgroundPosition = "#{-2148 * x/30}px #{-(20 + (2253-20) * y/31)}px"
-					# td.style.width = "#{2148 * 1/30}px"
-					# td.style.height = "#{(2253-20) * 1/31}px"
-					# td.style.backgroundPosition = "#{-x * size}px #{-(size + y*size)}px"
-					td.style.backgroundPosition = "#{-x * size}px #{-y * size}px"
-					td.style.width = "#{size}px"
-					td.style.height = "#{size}px"
-					td.style.opacity = if Math.random() < 0.2 then "0.5" else "1"
-					tr.appendChild(td)
-				table.appendChild(tr)
-			document.body.appendChild(table)
+			not_a_table = document.createElement "div"
+			not_a_table.style.position = "relative"
+			size = 71
+			not_a_table.style.width = "#{size * 30}px"
+			not_a_table.style.height = "#{size * 30}px"
+			for y in [0..30]
+				for x in [0..30]
+					glyph_el = document.createElement "div"
+					glyph_el.style.backgroundImage = "url(font/barrish-3.png)" # "url(font/barrish.svg)"
+					glyph_el.style.backgroundPosition = "#{-x * size}px #{-y * size}px"
+					glyph_el.style.position = "absolute"
+					glyph_el.style.left = "#{x * size}px"
+					glyph_el.style.top = "#{y * size}px"
+					glyph_el.style.width = "#{size}px"
+					glyph_el.style.height = "#{size}px"
+					glyph_el.style.opacity = if Math.random() < 0.2 then "0.5" else "1"
+					not_a_table.appendChild(glyph_el)
+			document.body.appendChild(not_a_table)
 	
 </script>
