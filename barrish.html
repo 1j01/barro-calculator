@@ -110,13 +110,13 @@
 			table = document.createElement "div"
 			table.className = "table"
 			table.style.position = "relative"
-			size = 71
-			table.style.width = "#{size * 31}px"
+			size = 71 * 2
+			table.style.width = "#{size * 30}px"
 			table.style.height = "#{size * 31}px"
-			for y in [0..30]
-				for x in [0..30]
+			for y in [0...31]
+				for x in [0...30]
 					glyph_el = document.createElement "div"
-					glyph_el.style.backgroundImage = "url(font/barrish.png)" # "url(font/barrish.svg)"
+					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
