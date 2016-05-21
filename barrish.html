@@ -2,9 +2,9 @@
 <meta charset="utf-8">
 <title>Barrish Calculator</title>
 <link rel="stylesheet" href="reset.css">
-<!-- <link rel="stylesheet" href="typebase.css"> -->
-<!-- <link rel="stylesheet" href="animate.css"> -->
-<!-- <link rel="stylesheet" href="whatnot.css"> -->
+<link rel="stylesheet" href="typebase.css">
+<link rel="stylesheet" href="animate.css">
+<link rel="stylesheet" href="whatnot.css">
 <script src="lib/coffee-script.js"></script>
 <script src="lib/jquery-2.1.4.js"></script>
 <script src="helpers.coffee" type="text/coffeescript"></script>
@@ -48,24 +48,10 @@
 			.replace /\.|·/g, "" # dots can separate syllables
 	
 	separate_gylphs = (text)->
-		# pair up the first two if there's two
-		# pair up the next two if there's four
 		syllables = text.split(/\.|·/g)
 		glyphs = []
 		for syllable in syllables
-			# letters = normalize(syllable).split("")
 			letters = normalize(syllable)
-			# if letters.length >= 4
-			# 	glyphs.push(letters.slice(2, 4))
-			# 	glyphs.push(letters.slice(0, 2))
-			# else if letters.length >= 2
-			# 	glyphs.push(letters.slice(0, 2))
-			# 	if letters.length >= 2
-			# 		glyphs.push(letters[2])
-			# else
-			# 	glyphs.push(letters[0])
-			# 	if letters.length >= 1
-			# 		glyphs.push(letters[1])
 			i = 0
 			while i < letters.length
 				if i + 1 < letters.length
@@ -73,24 +59,25 @@
 				else
 					glyphs.push(letters[i])
 				i += 2
-		# console.log text, glyphs
 		glyphs
+	
+	vowels =
+		oo: "ʉ"
+		ay: "a"
+		ey: "a"
+		ah: "ɐ"
+		ee: "e"
+		uh: "ʌ"
+		ju: "/ju/"
+		ih: "e̞"
+		oh: "o"
+		eh: "ɘ"
 	
 	$.get "lexicon.txt", (text)->
 		words =
 			for [word, definition] in colon_separated lines_of text
 				word
 		
-		# character_occurrences = new Map
-		# 
-		# for word in words
-		# 	for character in normalize(word)
-		# 		character_occurrences[character] ?= 0
-		# 		character_occurrences[character] += 1
-		# 
-		# console.log character_occurrences
-		
-		# glyph_occurrences = new Map
 		glyph_occurrences = {}
 		
 		for word in words
@@ -117,16 +104,19 @@
 		# 		table.appendChild(tr)
 		# 	document.body.appendChild(table)
 		
+		table_container = document.createElement "div"
+		table_container.className = "table-container"
 		do make_other_better_glyph_occurrences_table = ->
-			not_a_table = document.createElement "div"
-			not_a_table.style.position = "relative"
+			table = document.createElement "div"
+			table.className = "table"
+			table.style.position = "relative"
 			size = 71
-			not_a_table.style.width = "#{size * 30}px"
-			not_a_table.style.height = "#{size * 30}px"
+			table.style.width = "#{size * 31}px"
+			table.style.height = "#{size * 31}px"
 			for y in [0..30]
 				for x in [0..30]
 					glyph_el = document.createElement "div"
-					glyph_el.style.backgroundImage = "url(font/barrish-3.png)" # "url(font/barrish.svg)"
+					glyph_el.style.backgroundImage = "url(font/barrish.png)" # "url(font/barrish.svg)"
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
@@ -134,7 +124,9 @@
 					glyph_el.style.width = "#{size}px"
 					glyph_el.style.height = "#{size}px"
 					glyph_el.style.opacity = if Math.random() < 0.2 then "0.5" else "1"
-					not_a_table.appendChild(glyph_el)
-			document.body.appendChild(not_a_table)
+					table.appendChild(glyph_el)
+			table_container.appendChild(table)
+			document.body.appendChild(table_container)
+			document.body.style.maxWidth = document.body.style.width = "calc(" + table.style.width + " + " + getComputedStyle(table_container).paddingLeft + " + " + getComputedStyle(table_container).paddingRight + ")"
 	
 </script>
