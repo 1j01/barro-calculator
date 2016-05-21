@@ -77,3 +77,8 @@ textarea {
 	border-radius: 10px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
+
+#output span:not(:first-child) {
+	margin-left: -0.15rem;
+	word-spacing: 0.2rem;
+}
