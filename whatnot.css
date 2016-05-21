@@ -70,3 +70,11 @@ textarea {
 	height: 4em;
 	white-space: pre;
 }
+
+table {
+	table-layout: fixed;
+}
+
+table tr td {
+	padding: 0 1rem;
+}

@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="whatnot.css">
 <script src="lib/coffee-script.js"></script>
 <script src="lib/jquery-2.1.4.js"></script>
+<script src="helpers.coffee" type="text/coffeescript"></script>
 <section>
 	<h2>Random Events</h2>
 	<button id="random-event">Make Something Happen</button>
@@ -33,15 +34,6 @@
 </section>
 <a href="barrish">Barrish text</a>
 <script type="text/coffeescript">
-	
-	lines_of = (text)->
-		line for line in text.split /[\n\r]+/ when (line = line.replace /#.*/, "").match /\S/
-	
-	colon_separated = (lines)->
-		line.split /\s*:\s*/ for line in lines
-	
-	lerp = (a, b, x)->
-		a + (b - a) * x
 	
 	death_chance_modifier_for = (health, doublious=no)->
 		console.log "Get death_chance_modifier_for", health, doublious
