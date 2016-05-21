@@ -127,7 +127,7 @@
 				for x in [0..30]
 					glyph_el = document.createElement "div"
 					glyph_el.style.backgroundImage = "url(font/barrish-3.png)" # "url(font/barrish.svg)"
-					glyph_el.style.backgroundPosition = "#{-x * size}px #{-y * size}px"
+					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
 					glyph_el.style.top = "#{y * size}px"
