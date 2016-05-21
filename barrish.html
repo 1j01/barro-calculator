@@ -51,9 +51,7 @@
 			_text += c unless c.charCodeAt(0) in [810, 865]
 		_text
 			.replace /p̪/g, "P" # pt
-			# .replace /v/g, "V" # this is Very silly with a capital V
 			.replace /pj/g, "7"
-			# .replace /hh/g, "x"
 			.replace /\[p̪͡f\]|\[pf\]/g, "9" # pf
 			.replace /\/dzh\//g, "D" # dzh
 			.replace /\/ng\//g, "g" # ng
@@ -117,9 +115,41 @@
 					i += 1
 				# else if length_remaining > 0
 				# 	throw new Error "I don't understand '#{text}' at #{i} (letter types '#{letter_types}', length remaining: #{length_remaining})"
-				
 			
 		glyphs
+	
+	render_glyph = (glyph, zoom="0.1")->
+		glyph_el = document.createElement("span")
+		# glyph_el.textContent = glyph
+		
+		if glyph.length >= 3
+			x = alphabet.indexOf(glyph[0])
+			y = alphabet.indexOf(glyph[2]) + 1
+			diacritic = glyph[1] unless glyph[1] is "A"
+		else if glyph.length >= 2
+			x = alphabet.indexOf(glyph[0])
+			y = alphabet.indexOf(glyph[1]) + 1
+			diacritic = "t"
+		else
+			x = alphabet.indexOf(glyph[0])
+			y = 0
+		
+		glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
+		glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
+		glyph_el.style.display = "inline-block"
+		glyph_el.style.width = "#{size}px"
+		glyph_el.style.height = "#{size}px"
+		glyph_el.style.zoom = zoom
+		
+		if diacritic?
+			diacritic_el = render_glyph(diacritic, "0.5")
+			glyph_el.style.position = "relative"
+			diacritic_el.style.position = "absolute"
+			diacritic_el.style.top = "90%"
+			diacritic_el.style.left = "20%"
+			glyph_el.appendChild(diacritic_el)
+		
+		glyph_el
 	
 	render_barrish = (text, div)->
 		div.innerHTML = ""
@@ -131,30 +161,19 @@
 				div.appendChild(glyph_el)
 			else
 				for glyph in separate_gylphs(word)
-					glyph_el = document.createElement("span")
-					# glyph_el.textContent = glyph
+					glyph_el = render_glyph(glyph)
+					# if diacritic?
+					# 	diacritic_el = document.createElement("span")
+					# 	diacritic_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
+					# 	diacritic_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
+					# 	diacritic_el.style.display = "inline-block"
+					# 	diacritic_el.style.width = "#{size}px"
+					# 	diacritic_el.style.height = "#{size}px"
+					# 	glyph_el.appendChild(diacritic_el)
+					# 	glyph_el.style.position = "relative"
+					# 	diacritic_el.style.position = "absolute"
+					# 	diacritic_el.style.top = "80%"
 					
-					if glyph.length >= 3
-						x = alphabet.indexOf(glyph[0])
-						y = alphabet.indexOf(glyph[2])
-					else if glyph.length >= 2
-						x = alphabet.indexOf(glyph[0])
-						y = alphabet.indexOf(glyph[1])
-					else
-						x = alphabet.indexOf(glyph[0])
-						y = 0
-					# glyph_el = document.createElement "div"
-					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
-					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
-					# glyph_el.style.position = "absolute"
-					# glyph_el.style.left = "#{x * size}px"
-					# glyph_el.style.top = "#{y * size}px"
-					glyph_el.style.display = "inline-block"
-					glyph_el.style.width = "#{size}px"
-					glyph_el.style.height = "#{size}px"
-					glyph_el.style.zoom = "0.1"
-					glyph_el.style.webkitFilter = "invert() drop-shadow(0 5px 5px rgba(0, 0, 0, 0.5))"
-					# glyph_el.style.opacity = if Math.random() < 0.2 then "0.5" else "1"
 					div.appendChild(glyph_el)
 					glyph_el.setAttribute("data-glyph", glyph)
 			glyph_el = document.createElement("span")

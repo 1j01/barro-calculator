@@ -78,6 +78,12 @@ textarea {
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
+#output {
+	color: black;
+	text-shadow: none;
+	-webkit-filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+	filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
 #output span:not(:first-child) {
 	margin-left: -0.15rem;
 	word-spacing: 0.2rem;
