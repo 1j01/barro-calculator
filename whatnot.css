@@ -10,7 +10,7 @@ html {
 	/*background-color: rgb(165, 128, 42);*/
 	color: white;
 	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.53);
-	background-color: rgb(0, 0, 0);
+	background-color: #56504E;
 }
 html::after {
 	content: "";
@@ -83,8 +83,17 @@ textarea {
 	text-shadow: none;
 	-webkit-filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 	filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+	font-size: 2em;
 }
 #output span:not(:first-child) {
 	margin-left: -0.15rem;
 	word-spacing: 0.2rem;
 }
+#glyph-table .table {
+	zoom: 0.3;
+	margin: 2rem auto;
+}
+h2 {
+	margin-bottom: 0.3rem;
+}
+

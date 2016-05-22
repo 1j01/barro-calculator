@@ -113,12 +113,10 @@
 					i += 1
 				else
 					i += 1
-				# else if length_remaining > 0
-				# 	throw new Error "I don't understand '#{text}' at #{i} (letter types '#{letter_types}', length remaining: #{length_remaining})"
-			
+		
 		glyphs
 	
-	render_glyph = (glyph, zoom="0.1")->
+	render_glyph = (glyph, zoom)->
 		glyph_el = document.createElement("span")
 		# glyph_el.textContent = glyph
 		
@@ -161,19 +159,7 @@
 				div.appendChild(glyph_el)
 			else
 				for glyph in separate_gylphs(word)
-					glyph_el = render_glyph(glyph)
-					# if diacritic?
-					# 	diacritic_el = document.createElement("span")
-					# 	diacritic_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
-					# 	diacritic_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
-					# 	diacritic_el.style.display = "inline-block"
-					# 	diacritic_el.style.width = "#{size}px"
-					# 	diacritic_el.style.height = "#{size}px"
-					# 	glyph_el.appendChild(diacritic_el)
-					# 	glyph_el.style.position = "relative"
-					# 	diacritic_el.style.position = "absolute"
-					# 	diacritic_el.style.top = "80%"
-					
+					glyph_el = render_glyph(glyph, "0.2")
 					div.appendChild(glyph_el)
 					glyph_el.setAttribute("data-glyph", glyph)
 			glyph_el = document.createElement("span")
@@ -216,16 +202,18 @@
 		# 		table.appendChild(tr)
 		# 	document.body.appendChild(table)
 		
-		table_container = document.getElementById("glyph-table")
-		do make_other_better_glyph_occurrences_table = ->
-			table = document.createElement "div"
+		do make_glyph_table = ->
+			table_container = document.getElementById("glyph-table")
+			table = document.createElement("div")
 			table.className = "table"
 			table.style.position = "relative"
 			table.style.width = "#{size * 30}px"
 			table.style.height = "#{size * 31}px"
+			# table_container.style.width = "#{size * 30}px"
+			# table_container.style.height = "#{size * 31}px"
 			for y in [0...31]
 				for x in [0...30]
-					glyph_el = document.createElement "div"
+					glyph_el = document.createElement("div")
 					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
@@ -237,6 +225,6 @@
 					table.appendChild(glyph_el)
 			table_container.appendChild(table)
 			document.body.appendChild(table_container)
-			document.body.style.maxWidth = document.body.style.width = "calc(" + table.style.width + " + " + getComputedStyle(table_container).paddingLeft + " + " + getComputedStyle(table_container).paddingRight + ")"
+			# document.body.style.maxWidth = document.body.style.width = "calc(" + table.style.width + " + " + getComputedStyle(table_container).paddingLeft + " + " + getComputedStyle(table_container).paddingRight + ")"
 	
 </script>
