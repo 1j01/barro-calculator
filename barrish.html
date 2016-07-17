@@ -116,6 +116,13 @@
 		
 		glyphs
 	
+	# glyph_name_components = "Dzha Ᵹa P'fa Pja Ba Da Æ Ih Fa Ha Ja Ka La Ma Na Oh Pa Ra Sa Ta Va Xha Ah Eh Uu Uh Wa Ay Ju P'a".split(" ")
+	glyph_name_components = "Dzh Ᵹ P'f Pj B D Æ Ih F H J K L M N Oh P R S T V Xh Ah Eh Uu Uh W Ay Ju P'".split(" ")
+	glyph_name_component_represents_vowel = (glyph_name_component)->
+		# console.log "glyph_name_component_represents_vowel", glyph_name_component,
+		# [no, no, no, no, no, no, yes, yes, no, no, no, no, no, no, no, yes, no, no, no, no, no, yes, yes, yes, yes, yes, no, yes, yes, no][glyph_name_component]
+		"Æ Ih Oh Xh Ah Eh Uu Uh Ay Ju".split(" ").indexOf(glyph_name_component) >= 0
+	
 	render_glyph = (glyph, zoom)->
 		glyph_el = document.createElement("span")
 		# glyph_el.textContent = glyph
@@ -138,6 +145,31 @@
 		glyph_el.style.width = "#{size}px"
 		glyph_el.style.height = "#{size}px"
 		glyph_el.style.zoom = zoom
+		# glyph_el.title =
+		# 	if y is 0
+		# 		"#{glyph_name_components[x]}"
+		# 	else
+		# 		# "#{glyph_name_components[y - 1]}#{glyph_name_components[x]?.toLowerCase()}"
+		# 		# "#{glyph_name_components[x]}#{glyph_name_components[y - 1]?.toLowerCase()}"
+		# 		# if vowels[letter]?
+		# 		if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
+		# 			"#{glyph_name_components[x]}#{glyph_name_components[y - 1]?.toLowerCase()}"
+		# 		else
+		# 			"#{glyph_name_components[x]}a#{glyph_name_components[y - 1]?.toLowerCase()}"
+		
+		
+		glyph_el.title = "#{glyph_name_components[x]}" +
+			if y is 0
+				if glyph_name_component_represents_vowel(glyph_name_components[x])
+					""
+				else
+					"a"
+			else
+				# console.log glyph_name_components[y - 1], glyph_name_component_represents_vowel(glyph_name_components[y - 1])
+				if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
+					"#{glyph_name_components[y - 1]?.toLowerCase()}"
+				else
+					"a#{glyph_name_components[y - 1]?.toLowerCase()}"
 		
 		if diacritic?
 			diacritic_el = render_glyph(diacritic, "0.5")
