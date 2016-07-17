@@ -102,10 +102,11 @@
 			i = 0
 			while i < letters.length
 				length_remaining = letters.length - i - 1
-				if length_remaining >= 3 and letter_types.substr(i, 3).match(/cvc/)
+				# console.log {letters, length_remaining, letter_types}
+				if length_remaining >= 2 and letter_types.substr(i, 3).match(/cvc/)
 					glyphs.push(letters.substr(i, 3))
 					i += 3
-				else if length_remaining >= 2 and letter_types.substr(i, 2).match(/cc|cv|vc/)
+				else if length_remaining >= 1 and letter_types.substr(i, 2).match(/cc|cv|vc/)
 					glyphs.push(letters.substr(i, 2))
 					i += 2
 				else if length_remaining >= 1
@@ -155,6 +156,7 @@
 		glyph_el.style.height = "#{size}px"
 		glyph_el.style.zoom = zoom
 		glyph_el.title = name_for_glyph_at(x, y)
+		# glyph_el.title = "#{name_for_glyph_at(x, y)} (#{glyph})"
 		
 		if diacritic?
 			diacritic_el = render_glyph(diacritic, "0.5")
