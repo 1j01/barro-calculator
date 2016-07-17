@@ -116,16 +116,25 @@
 		
 		glyphs
 	
-	# glyph_name_components = "Dzha Ᵹa P'fa Pja Ba Da Æ Ih Fa Ha Ja Ka La Ma Na Oh Pa Ra Sa Ta Va Xha Ah Eh Uu Uh Wa Ay Ju P'a".split(" ")
 	glyph_name_components = "Dzh Ᵹ P'f Pj B D Æ Ih F H J K L M N Oh P R S T V Xh Ah Eh Uu Uh W Ay Ju P'".split(" ")
 	glyph_name_component_represents_vowel = (glyph_name_component)->
-		# console.log "glyph_name_component_represents_vowel", glyph_name_component,
-		# [no, no, no, no, no, no, yes, yes, no, no, no, no, no, no, no, yes, no, no, no, no, no, yes, yes, yes, yes, yes, no, yes, yes, no][glyph_name_component]
-		"Æ Ih Oh Xh Ah Eh Uu Uh Ay Ju".split(" ").indexOf(glyph_name_component) >= 0
+		"Æ Ih Oh Ah Eh Uu Uh Ay Ju".split(" ").indexOf(glyph_name_component) >= 0
+	
+	name_for_glyph_at = (x, y)->
+		"#{glyph_name_components[x]}" +
+			if y is 0
+				if glyph_name_component_represents_vowel(glyph_name_components[x])
+					""
+				else
+					"a"
+			else
+				if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
+					"#{glyph_name_components[y - 1]?.toLowerCase()}"
+				else
+					"a#{glyph_name_components[y - 1]?.toLowerCase()}"
 	
 	render_glyph = (glyph, zoom)->
 		glyph_el = document.createElement("span")
-		# glyph_el.textContent = glyph
 		
 		if glyph.length >= 3
 			x = alphabet.indexOf(glyph[0])
@@ -145,31 +154,7 @@
 		glyph_el.style.width = "#{size}px"
 		glyph_el.style.height = "#{size}px"
 		glyph_el.style.zoom = zoom
-		# glyph_el.title =
-		# 	if y is 0
-		# 		"#{glyph_name_components[x]}"
-		# 	else
-		# 		# "#{glyph_name_components[y - 1]}#{glyph_name_components[x]?.toLowerCase()}"
-		# 		# "#{glyph_name_components[x]}#{glyph_name_components[y - 1]?.toLowerCase()}"
-		# 		# if vowels[letter]?
-		# 		if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
-		# 			"#{glyph_name_components[x]}#{glyph_name_components[y - 1]?.toLowerCase()}"
-		# 		else
-		# 			"#{glyph_name_components[x]}a#{glyph_name_components[y - 1]?.toLowerCase()}"
-		
-		
-		glyph_el.title = "#{glyph_name_components[x]}" +
-			if y is 0
-				if glyph_name_component_represents_vowel(glyph_name_components[x])
-					""
-				else
-					"a"
-			else
-				# console.log glyph_name_components[y - 1], glyph_name_component_represents_vowel(glyph_name_components[y - 1])
-				if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
-					"#{glyph_name_components[y - 1]?.toLowerCase()}"
-				else
-					"a#{glyph_name_components[y - 1]?.toLowerCase()}"
+		glyph_el.title = name_for_glyph_at(x, y)
 		
 		if diacritic?
 			diacritic_el = render_glyph(diacritic, "0.5")
@@ -241,12 +226,10 @@
 			table.style.position = "relative"
 			table.style.width = "#{size * 30}px"
 			table.style.height = "#{size * 31}px"
-			# table_container.style.width = "#{size * 30}px"
-			# table_container.style.height = "#{size * 31}px"
 			for y in [0...31]
 				for x in [0...30]
 					glyph_el = document.createElement("div")
-					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
+					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)"
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
@@ -254,9 +237,9 @@
 					glyph_el.style.width = "#{size}px"
 					glyph_el.style.height = "#{size}px"
 					glyph_el.style.opacity = if Math.random() < 0.2 then "0.5" else "1"
+					glyph_el.title = name_for_glyph_at(x, y)
 					table.appendChild(glyph_el)
 			table_container.appendChild(table)
 			document.body.appendChild(table_container)
-			# document.body.style.maxWidth = document.body.style.width = "calc(" + table.style.width + " + " + getComputedStyle(table_container).paddingLeft + " + " + getComputedStyle(table_container).paddingRight + ")"
-	
+
 </script>
