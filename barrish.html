@@ -20,6 +20,7 @@
 <div id="glyph-table" class="table-container"></div>
 <script type="text/coffeescript">
 	
+	# don't need this as an object / a map
 	vowels =
 		# oo: "ʉ"
 		u: "ʉ"
@@ -40,6 +41,10 @@
 		o: "o"
 		# eh: "ɘ"
 		E: "ɘ"
+	
+	vowel_alphabet_characters = ""
+	for k, v of vowels
+		vowel_alphabet_characters += k
 	
 	alphabet = "Dg97bdeifhjklmnoprstvxAEuVwaJP"
 	
@@ -119,33 +124,71 @@
 		glyphs
 	
 	glyph_name_components = "Dzh Ᵹ P'f Pj B D Æ Ih F H J K L M N Oh P R S T V Xh Ah Eh Uu Uh W Ay Ju P'".split(" ")
+	vowel_glyph_name_components = "Æ Ih Oh Ah Eh Uu Uh Ay Ju".split(" ")
 	glyph_name_component_represents_vowel = (glyph_name_component)->
-		"Æ Ih Oh Ah Eh Uu Uh Ay Ju".split(" ").indexOf(glyph_name_component) >= 0
+		vowel_glyph_name_components.indexOf(glyph_name_component) >= 0
+	glyph_index_for_vowel_diacritic = (letter)->
+		vowel_alphabet_characters.indexOf(letter)
+	
+	# name_for_diacritic = (x)->
+	# 	
 	
 	name_for_glyph_at = (x, y)->
-		"#{glyph_name_components[x]}" +
-			if y is 0
-				if glyph_name_component_represents_vowel(glyph_name_components[x])
-					""
+		if y is 31
+			# "diacritic for vowel #{vowel_alphabet_characters[x]}"
+			"diacritic for vowel #{vowel_glyph_name_components[x]}"
+		else
+			"#{glyph_name_components[x]}" +
+				if y is 0
+					if glyph_name_component_represents_vowel(glyph_name_components[x])
+						""
+					else
+						"a"
 				else
-					"a"
-			else
-				if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
-					"#{glyph_name_components[y - 1]?.toLowerCase()}"
-				else
-					"a#{glyph_name_components[y - 1]?.toLowerCase()}"
+					if glyph_name_component_represents_vowel(glyph_name_components[y - 1])
+						"#{glyph_name_components[y - 1]?.toLowerCase()}"
+					else
+						"a#{glyph_name_components[y - 1]?.toLowerCase()}"
 	
-	render_glyph = (glyph, zoom)->
+	# name_for_glyph_at = (x, y, diacritic)->
+	# 	x_name = glyph_name_components[x]
+	# 	y_name = glyph_name_components[y - 1]
+	# 	name = x_name
+	# 	
+	# 	if y is 0
+	# 		if glyph_name_component_represents_vowel(x_name)
+	# 			""
+	# 		else
+	# 			diacritic ? "a"
+	# 	else
+	# 		unless y_name?
+	# 			console.error x, y, diacritic, x_name, y_name
+	# 		unless glyph_name_component_represents_vowel(y_name)
+	# 			# if diacritic is "a" then "" else if diacritic? then diacritic else "a"
+	# 			# name += "a"
+	# 			name += diacritic ? "a"
+	# 		name += y_name?.toLowerCase()
+	# 		if diacritic is "a"
+	# 			name += "a"
+	# 	name
+	
+	render_glyph = (glyph, as_diacritic)->
 		glyph_el = document.createElement("span")
 		
 		if glyph.length >= 3
 			x = alphabet.indexOf(glyph[0])
 			y = alphabet.indexOf(glyph[2]) + 1
-			diacritic = glyph[1] unless glyph[1] is "A"
+			# console.log glyph[1]
+			diacritic = glyph[1] # unless glyph[1] is "A"
 		else if glyph.length >= 2
 			x = alphabet.indexOf(glyph[0])
 			y = alphabet.indexOf(glyph[1]) + 1
-			diacritic = "t"
+			# console.log glyph
+			# diacritic = "t"
+		else if as_diacritic
+			# console.log glyph[0]
+			x = glyph_index_for_vowel_diacritic(glyph[0])
+			y = 31
 		else
 			x = alphabet.indexOf(glyph[0])
 			y = 0
@@ -155,16 +198,19 @@
 		glyph_el.style.display = "inline-block"
 		glyph_el.style.width = "#{size}px"
 		glyph_el.style.height = "#{size}px"
-		glyph_el.style.zoom = zoom
-		glyph_el.title = name_for_glyph_at(x, y)
+		# glyph_el.style.zoom = if as_diacritic then "0.5" else "0.2" # this seems reversed
+		glyph_el.style.zoom = "0.2" unless as_diacritic # this seems reversed
+		glyph_el.title = name_for_glyph_at(x, y, diacritic)
 		# glyph_el.title = "#{name_for_glyph_at(x, y)} (#{glyph})"
 		
 		if diacritic?
-			diacritic_el = render_glyph(diacritic, "0.5")
+			diacritic_el = render_glyph(diacritic, yes)
 			glyph_el.style.position = "relative"
 			diacritic_el.style.position = "absolute"
-			diacritic_el.style.top = "90%"
-			diacritic_el.style.left = "20%"
+			# diacritic_el.style.top = "90%"
+			# diacritic_el.style.left = "20%"
+			diacritic_el.style.top = "70%"
+			diacritic_el.style.left = "0%"
 			glyph_el.appendChild(diacritic_el)
 		
 		glyph_el
@@ -179,7 +225,7 @@
 				div.appendChild(glyph_el)
 			else
 				for glyph in separate_gylphs(word)
-					glyph_el = render_glyph(glyph, "0.2")
+					glyph_el = render_glyph(glyph)
 					div.appendChild(glyph_el)
 					glyph_el.setAttribute("data-glyph", glyph)
 			glyph_el = document.createElement("span")
