@@ -43,7 +43,9 @@
 	
 	alphabet = "Dg97bdeifhjklmnoprstvxAEuVwaJP"
 	
-	size = 71 * 2
+	
+	font_image = "url(font/barrish.png)"
+	size = 12 * 12 # 71 * 2
 	
 	normalize = (text)->
 		_text = ""
@@ -148,7 +150,7 @@
 			x = alphabet.indexOf(glyph[0])
 			y = 0
 		
-		glyph_el.style.backgroundImage = "url(font/barrish-hd.png)" # "url(font/barrish.svg)"
+		glyph_el.style.backgroundImage = font_image
 		glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 		glyph_el.style.display = "inline-block"
 		glyph_el.style.width = "#{size}px"
@@ -226,11 +228,11 @@
 			table.className = "table"
 			table.style.position = "relative"
 			table.style.width = "#{size * 30}px"
-			table.style.height = "#{size * 31}px"
-			for y in [0...31]
+			table.style.height = "#{size * 32}px"
+			for y in [0...32]
 				for x in [0...30]
 					glyph_el = document.createElement("div")
-					glyph_el.style.backgroundImage = "url(font/barrish-hd.png)"
+					glyph_el.style.backgroundImage = font_image
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
