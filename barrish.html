@@ -22,6 +22,7 @@
 	
 	alphabet = "Dg97bdeifhjklmnoprstvxAEuVwaJP"
 	alphabet_vowel_characters = "eioAEuVaJ"
+	punctuation = ",;…!“”"
 	
 	font_image = "url(font/barrish.png)"
 	size = 144
@@ -106,7 +107,21 @@
 	
 	name_for_glyph_at = (x, y)->
 		if y is 31
-			"diacritic for vowel #{vowel_glyph_name_components[x]}"
+			switch x - alphabet_vowel_characters.length
+				when 0
+					"comma"
+				when 1
+					"full stop"
+				when 2
+					"trailing stop"
+				when 3
+					"exclamation mark"
+				when 4
+					"opening quotation mark"
+				when 5
+					"closing quotation mark"
+				else
+					"diacritic for vowel #{vowel_glyph_name_components[x]}"
 		else
 			"#{glyph_name_components[x]}" +
 				if y is 0
@@ -145,7 +160,10 @@
 	render_glyph = (glyph, as_diacritic)->
 		glyph_el = document.createElement("span")
 		
-		if glyph.length >= 3
+		if glyph in punctuation
+			x = alphabet_vowel_characters.length + punctuation.indexOf(glyph)
+			y = 31
+		else if glyph.length >= 3
 			x = alphabet.indexOf(glyph[0])
 			y = alphabet.indexOf(glyph[2]) + 1
 			# console.log glyph[1]
@@ -186,18 +204,20 @@
 		div.innerHTML = ""
 		words = text.split(" ")
 		for word in words
-			if word.match(/[!;]/)
-				glyph_el = document.createElement("span")
-				glyph_el.textContent = word
+			# TODO: this shouldn't need a special case
+			if word in punctuation
+				glyph_el = render_glyph(word)
 				div.appendChild(glyph_el)
+				glyph_el.setAttribute("data-glyph", glyph)
 			else
 				for glyph in separate_gylphs(word)
 					glyph_el = render_glyph(glyph)
 					div.appendChild(glyph_el)
 					glyph_el.setAttribute("data-glyph", glyph)
-			glyph_el = document.createElement("span")
-			glyph_el.textContent = " "
-			div.appendChild(glyph_el)
+			unless word is "!"
+				space_el = document.createElement("span")
+				space_el.textContent = " "
+				div.appendChild(space_el)
 	
 	input = document.getElementById("input")
 	output = document.getElementById("output")
