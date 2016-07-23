@@ -20,37 +20,11 @@
 <div id="glyph-table" class="table-container"></div>
 <script type="text/coffeescript">
 	
-	# don't need this as an object / a map
-	vowels =
-		# oo: "ʉ"
-		u: "ʉ"
-		# ay: "a"
-		# ey: "a"
-		a: "a"
-		# ah: "ɐ"
-		A: "ɐ"
-		# ee: "e"
-		e: "e"
-		# uh: "ʌ"
-		v: "V"
-		# ju: "/ju/"
-		J: "/ju/"
-		# ih: "e̞"
-		i: "e̞"
-		# oh: "o"
-		o: "o"
-		# eh: "ɘ"
-		E: "ɘ"
-	
-	vowel_alphabet_characters = ""
-	for k, v of vowels
-		vowel_alphabet_characters += k
-	
 	alphabet = "Dg97bdeifhjklmnoprstvxAEuVwaJP"
-	
+	alphabet_vowel_characters = "uaAevJioE"
 	
 	font_image = "url(font/barrish.png)"
-	size = 12 * 12 # 71 * 2
+	size = 144
 	
 	normalize = (text)->
 		_text = ""
@@ -100,7 +74,7 @@
 			
 			letter_types = (
 				for letter in letters
-					if vowels[letter]?
+					if alphabet_vowel_characters.indexOf(letter) > 0
 						"v"
 					else
 						"c"
@@ -128,14 +102,10 @@
 	glyph_name_component_represents_vowel = (glyph_name_component)->
 		vowel_glyph_name_components.indexOf(glyph_name_component) >= 0
 	glyph_index_for_vowel_diacritic = (letter)->
-		vowel_alphabet_characters.indexOf(letter)
-	
-	# name_for_diacritic = (x)->
-	# 	
+		alphabet_vowel_characters.indexOf(letter)
 	
 	name_for_glyph_at = (x, y)->
 		if y is 31
-			# "diacritic for vowel #{vowel_alphabet_characters[x]}"
 			"diacritic for vowel #{vowel_glyph_name_components[x]}"
 		else
 			"#{glyph_name_components[x]}" +
@@ -198,7 +168,6 @@
 		glyph_el.style.display = "inline-block"
 		glyph_el.style.width = "#{size}px"
 		glyph_el.style.height = "#{size}px"
-		# glyph_el.style.zoom = if as_diacritic then "0.5" else "0.2" # this seems reversed
 		glyph_el.style.zoom = "0.2" unless as_diacritic # this seems reversed
 		glyph_el.title = name_for_glyph_at(x, y, diacritic)
 		# glyph_el.title = "#{name_for_glyph_at(x, y)} (#{glyph})"
@@ -207,8 +176,6 @@
 			diacritic_el = render_glyph(diacritic, yes)
 			glyph_el.style.position = "relative"
 			diacritic_el.style.position = "absolute"
-			# diacritic_el.style.top = "90%"
-			# diacritic_el.style.left = "20%"
 			diacritic_el.style.top = "70%"
 			diacritic_el.style.left = "0%"
 			glyph_el.appendChild(diacritic_el)
