@@ -26,8 +26,31 @@
 	alphabet_vowel_characters = "eioAEuVaJ"
 	punctuation = ",;…!“”"
 	
-	font_image = "url(font/barrish.png)"
+	font_image_path = "font/barrish.png"
+	font_image = new Image
+	font_image.onload = (e)->
+		
+	font_image.src = font_image_path
 	size = 144
+	
+	kerning_table = new Map
+	
+	kerning_canvas = document.createElement("canvas")
+	kctx = kerning_canvas.getContext("2d")
+	
+	# find_space_between = (img1, img2)->
+	# 	kerning_canvas.width = 
+	# 	kerning_canvas.height = 
+	
+	kern = (x1, y1, x2, y2)->
+		id = "(#{x1}, #{y1}) (#{x2}, #{y2})"
+		if kerning_table.has(id)
+			return kerning_table.get(id)
+		
+		value = 0
+		
+		kerning_table.set(id, value)
+		value
 	
 	normalize = (text)->
 		_text = ""
@@ -184,7 +207,7 @@
 		if glyph.length is 3
 			diacritic = glyph[1]
 		
-		glyph_el.style.backgroundImage = font_image
+		glyph_el.style.backgroundImage = "url(#{font_image_path})"
 		glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 		glyph_el.style.display = "inline-block"
 		glyph_el.style.width = "#{size}px"
@@ -198,6 +221,8 @@
 			diacritic_el.style.position = "absolute"
 			diacritic_el.style.top = "60%"
 			diacritic_el.style.left = "0%"
+			# diacritic_el.style.clipPath = "inset(15px 0px)"
+			diacritic_el.style.clip = "rect(50px, auto, auto, auto)"
 			glyph_el.appendChild(diacritic_el)
 		
 		glyph_el
@@ -266,7 +291,7 @@
 			for y in [0...32]
 				for x in [0...30]
 					glyph_el = document.createElement("div")
-					glyph_el.style.backgroundImage = font_image
+					glyph_el.style.backgroundImage = "url(#{font_image_path})"
 					glyph_el.style.backgroundPosition = "#{1 - x * size}px #{1 - y * size}px"
 					glyph_el.style.position = "absolute"
 					glyph_el.style.left = "#{x * size}px"
