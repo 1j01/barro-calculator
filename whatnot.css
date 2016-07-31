@@ -71,7 +71,8 @@ textarea {
 	white-space: pre;
 }
 
-.table-container {
+.table-container,
+#output {
 	background: white;
 	padding: 20px;
 	border-radius: 10px;
@@ -79,10 +80,12 @@ textarea {
 }
 
 #output {
-	color: black;
+	/*background: #222;*/
+	/*color: white;*/
+	/*color: black;*/
 	text-shadow: none;
-	-webkit-filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
-	filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+	/*-webkit-filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));*/
+	/*filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));*/
 	font-size: 2em;
 	line-height: 1.5;
 }
