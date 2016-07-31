@@ -72,7 +72,7 @@ textarea {
 }
 
 .table-container,
-#output {
+#output-area {
 	background: white;
 	padding: 20px;
 	border-radius: 10px;
@@ -80,14 +80,10 @@ textarea {
 }
 
 #output {
-	/*background: #222;*/
-	/*color: white;*/
-	/*color: black;*/
+	zoom: 0.2;
 	text-shadow: none;
-	/*-webkit-filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));*/
-	/*filter: invert() drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));*/
 	font-size: 2em;
-	line-height: 1.5;
+	line-height: 6.5;
 }
 #output span:not(:first-child) {
 	margin-left: -0.15rem;

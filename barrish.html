@@ -14,7 +14,9 @@
 </label>
 <label>
 	<h2>Output</h2>
-	<div id="output"></div>
+	<div id="output-area">
+		<div id="output"></div>
+	</div>
 </label>
 <h2>Glyph Table</h2>
 <div id="glyph-table" class="table-container"></div>
@@ -187,7 +189,6 @@
 		glyph_el.style.display = "inline-block"
 		glyph_el.style.width = "#{size}px"
 		glyph_el.style.height = "#{size}px"
-		glyph_el.style.zoom = "0.2" unless as_diacritic # this seems reversed
 		glyph_el.title = name_for_glyph_at(x, y, diacritic)
 		# glyph_el.title = "#{name_for_glyph_at(x, y)} (#{glyph})"
 		
