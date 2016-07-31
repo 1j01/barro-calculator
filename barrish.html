@@ -205,16 +205,10 @@
 		div.innerHTML = ""
 		words = text.split(" ")
 		for word in words
-			# TODO: this shouldn't need a special case
-			if word in punctuation
-				glyph_el = render_glyph(word)
+			for glyph in separate_gylphs(word)
+				glyph_el = render_glyph(glyph)
 				div.appendChild(glyph_el)
 				glyph_el.setAttribute("data-glyph", glyph)
-			else
-				for glyph in separate_gylphs(word)
-					glyph_el = render_glyph(glyph)
-					div.appendChild(glyph_el)
-					glyph_el.setAttribute("data-glyph", glyph)
 			unless word is "!"
 				space_el = document.createElement("span")
 				space_el.textContent = " "
