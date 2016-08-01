@@ -92,6 +92,9 @@ textarea {
 /*#output span[title]:hover {
 	background: rgba(128, 128, 128, 0.1);
 }*/
+/*#output span[title] {
+	background: rgba(128, 128, 128, 0.1);
+}*/
 #glyph-table .table {
 	zoom: 0.3;
 	margin: 2rem auto;

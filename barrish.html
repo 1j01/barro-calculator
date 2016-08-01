@@ -10,7 +10,9 @@
 <script src="helpers.coffee" type="text/coffeescript"></script>
 <label>
 	<h2>Input</h2>
-	<textarea id="input">! sek ; ! /ng/ʌl.et ; ! te̞l.fɐl.e̞r.et ; bʉnd.et e̞n.krɘ.vɐ mʉt ɘn.se̞p.et jor./ng/on.sɘx ɐk /ng/a.mɐlk.sjɘd , lɘd.ɘ xe̞.dɘn lot.p̪ɘxt se̞.lʌ ɐk ɐld o se̞les me̞.le̞s ; ja/ng/.et ɐk pe̞r.e̞n.se̞p.et s/ju/.ner.dɘ.lo/ng/ fʌr mɐs.jon ɐk op̪.e̞r.ʌ ɘn.dʌ s/ju/.fʉkt bɐ.sak , s/ju/or.sɐ.ke̞n le.nɐrt se.dʌn for.dɘ.bɘ.dɐt ; hɐr.set et.mɐ sʌm.de̞ fʌr /ng/ʌl.ve̞r.jɐn.mɐ.ja ɐk [p̪͡f]a.ve̞r.jɐn.et jed.mek , vol.vɘ.dɘt ɐv kɐ.vɐn.et bor.ɐ ; op̪.e̞r.ʌ.hɐrs.et ɐr.tʉs.ɘl fe̞r.mɐt ɐk fors.ɐ.le.for.hɐn.le̞n o fe̞r.mɐt ɐk fɘl.e̞s.kɐp.bɘst.e̞l ; sɘlv ne.het.e̞r re.sʌ ma.do.vɘn.de̞r.len.fɐt , les.ɐ —</textarea>
+	<textarea id="input">! sek ; ! /ng/ʌl.et ; ! te̞l.fɐl.e̞r.et ; bʉnd.et e̞n.krɘ.vɐ mʉt ɘn.se̞p.et jor./ng/on.sɘx ɐk /ng/a.mɐlk.sjɘd , lɘd.ɘ xe̞.dɘn lot.p̪ɘxt se̞.lʌ ɐk ɐld o se̞les me̞.le̞s ; ja/ng/.et ɐk pe̞r.e̞n.se̞p.et s/ju/.ner.dɘ.lo/ng/ fʌr mɐs.jon ɐk op̪.e̞r.ʌ ɘn.dʌ s/ju/.fʉkt bɐ.sak , s/ju/or.sɐ.ke̞n le.nɐrt se.dʌn for.dɘ.bɘ.dɐt ; hɐr.set et.mɐ sʌm.de̞ fʌr /ng/ʌl.ve̞r.jɐn.mɐ.ja ɐk [p̪͡f]a.ve̞r.jɐn.et jed.mek , vol.vɘ.dɘt ɐv kɐ.vɐn.et bor.ɐ ; op̪.e̞r.ʌ.hɐrs.et ɐr.tʉs.ɘl fe̞r.mɐt ɐk fors.ɐ.le.for.hɐn.le̞n o fe̞r.mɐt ɐk fɘl.e̞s.kɐp.bɘst.e̞l ; sɘlv ne.het.e̞r re.sʌ ma.do.vɘn.de̞r.len.fɐt , les.ɐ</textarea>
+	<!-- <textarea id="input">dɘɘdɘɘɘɘllgllleeewba be br btbbollob wel m mues mue muemmuem ɘɘɘɘɘɘeeesssssscccccvvvvvbbbbbnnnnmmmmmjjjjjjjjjjrrrrrrrrrrreeeeewwwwwwqqqqqqaaaaavvvvvvvvbbbbnnnnnererertetetheheheh -->
+</textarea>
 </label>
 <label>
 	<h2>Output</h2>
@@ -27,10 +29,23 @@
 	punctuation = ",;…!“”"
 	
 	font_image_path = "font/barrish.png"
+	
 	font_image = new Image
+	
+	font_image_load_callbacks = []
+	
 	font_image.onload = (e)->
-		
+		font_image.loaded = yes
+		fn() for fn in font_image_load_callbacks
+	
+	when_font_image_is_loaded = (fn)->
+		if font_image.loaded
+			fn()
+		else
+			font_image_load_callbacks.push(fn)
+	
 	font_image.src = font_image_path
+	
 	size = 144
 	
 	kerning_table = new Map
@@ -38,19 +53,77 @@
 	kerning_canvas = document.createElement("canvas")
 	kctx = kerning_canvas.getContext("2d")
 	
-	# find_space_between = (img1, img2)->
-	# 	kerning_canvas.width = 
-	# 	kerning_canvas.height = 
+	document.body.appendChild kerning_canvas
+	
+	get_image_data_for_glyph = (x, y)->
+		kerning_canvas.width = size
+		kerning_canvas.height = size
+		kctx.drawImage(font_image, 1 - x * size, 1 - y * size)
+		kctx.getImageData(0, 0, size, size)
+	
+	minimum_space = 10
+	
+	find_space_between = (image_data_1, image_data_2)->
+		relevant_rows = []
+		min_height = Math.min(image_data_1.height, image_data_2.height)
+		for y in [0..min_height]
+			present_in_1 = no
+			present_in_2 = no
+			for x in [0..image_data_1.width]
+				present_in_1 = yes if image_data_1.data[(y * image_data_1.width + x) * 4 + 3]
+			for x in [0..image_data_2.width]
+				present_in_2 = yes if image_data_2.data[(y * image_data_2.width + x) * 4 + 3]
+			if present_in_1 and present_in_2
+				relevant_rows.push(y)
+		smallest_gap = Infinity
+		for y in relevant_rows
+			# rightmost_in_1 = 0
+			# for x in [0..image_data_1.width]
+			for x in [image_data_1.width..0]
+				if image_data_1.data[(y * image_data_1.width + x) * 4 + 3]
+					rightmost_in_1 = x
+					break
+			# leftmost_in_2 = image_data_2.width
+			for x in [0..image_data_2.width]
+				if image_data_2.data[(y * image_data_2.width + x) * 4 + 3]
+					leftmost_in_2 = x
+					break
+			
+			gap = leftmost_in_2 - rightmost_in_1 + image_data_1.width
+			smallest_gap = Math.min(smallest_gap, gap)
+		# smallest_gap
+		# Math.max(minimum_space, smallest_gap)
+		smallest_gap - minimum_space
 	
 	kern = (x1, y1, x2, y2)->
 		id = "(#{x1}, #{y1}) (#{x2}, #{y2})"
 		if kerning_table.has(id)
 			return kerning_table.get(id)
 		
-		value = 0
+		# value = 0
+		# value = Math.random() * 60
+		image_data_1 = get_image_data_for_glyph(x1, y1)
+		image_data_2 = get_image_data_for_glyph(x2, y2)
+		value = find_space_between(image_data_1, image_data_2)
 		
 		kerning_table.set(id, value)
 		value
+		
+	kern_glyph_elements = (left_glyph_el, right_glyph_el)->
+		console.log "kern_glyph_elements", left_glyph_el, right_glyph_el
+		{x: x1, y: y1} = left_glyph_el.coordinates
+		{x: x2, y: y2} = right_glyph_el.coordinates
+		console.log "kern", x1, y1, x2, y2
+		value = kern(x1, y1, x2, y2)
+		console.log "got", value
+		left_glyph_el.style.marginRight = "#{-value}px"
+	
+	# when_font_image_is_loaded ->
+	# 	image_data = get_image_data_for_glyph 1, 5
+	# 	for i in [0..image_data.data.length] by 4
+	# 		image_data.data[i+3] = (image_data.data[i+3] > 0) * 255
+	# 	
+	# 	kctx.putImageData(image_data, 0, 0)
 	
 	normalize = (text)->
 		_text = ""
@@ -221,24 +294,34 @@
 			diacritic_el.style.position = "absolute"
 			diacritic_el.style.top = "60%"
 			diacritic_el.style.left = "0%"
-			# diacritic_el.style.clipPath = "inset(15px 0px)"
 			diacritic_el.style.clip = "rect(50px, auto, auto, auto)"
 			glyph_el.appendChild(diacritic_el)
 		
+		glyph_el.glyph = glyph
+		glyph_el.coordinates = {x, y}
+		
 		glyph_el
 	
-	render_barrish = (text, div)->
-		div.innerHTML = ""
+	render_barrish = (text, container)->
+		container.innerHTML = ""
 		words = text.split(" ")
+		previous_glyph_el = null
 		for word in words
 			for glyph in separate_gylphs(word)
 				glyph_el = render_glyph(glyph)
-				div.appendChild(glyph_el)
+				container.appendChild(glyph_el)
 				glyph_el.setAttribute("data-glyph", glyph)
+				if previous_glyph_el?
+					do (glyph_el, previous_glyph_el)->
+						when_font_image_is_loaded ->
+							kern_glyph_elements(previous_glyph_el, glyph_el)
+							# kern_glyph_elements(glyph_el, previous_glyph_el)
+				previous_glyph_el = glyph_el
 			unless word is "!"
 				space_el = document.createElement("span")
 				space_el.textContent = " "
-				div.appendChild(space_el)
+				container.appendChild(space_el)
+				previous_glyph_el = null
 	
 	input = document.getElementById("input")
 	output = document.getElementById("output")
