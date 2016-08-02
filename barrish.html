@@ -274,7 +274,7 @@
 			glyph_el.style.position = "relative"
 			diacritic_el.style.position = "absolute"
 			diacritic_el.style.top = "60%"
-			diacritic_el.style.left = "0%"
+			diacritic_el.style.left = "-9px" # FIXME: why shouldn't this be 0%? (also should probably do this in the backgroundPosition if anything?)
 			diacritic_el.style.clip = "rect(50px, auto, auto, auto)"
 			glyph_el.appendChild(diacritic_el)
 		
